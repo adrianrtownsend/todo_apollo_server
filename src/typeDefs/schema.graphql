@@ -1,0 +1,79 @@
+type Tag {
+	id: Int
+	name: String!
+	visible: Boolean!
+}
+
+type Todo {
+	id: Int
+	title: String!
+	description: String
+	completed: Boolean!
+	user: User!
+}
+
+type User {
+	id: Int
+	firstName: String!
+	lastName: String!
+	username: String!
+	email: String!
+	password: String!
+	visible: Boolean!
+	todos: [Todo]
+}
+
+type Book {
+	title: String
+	author: String
+}
+
+type Query {
+	user(id: Int): User
+	todo(id: Int): Todo
+	getUsers: [User]
+	getUserById(id: String): User
+	getTodos: [Todo]
+	getTodosByUserId(userId: String): [Todo]
+	users: [User]
+	todos: [Todo]
+	books: [Book]
+	getUsersRaw: [User]
+	getTodosRaw: [Todo]
+	getTags: [Tag]
+}
+
+type Mutation {
+	createUser(
+		username: String!
+		email: String!
+		firstName: String!
+		lastName: String!
+		password: String!
+	): User!
+	createTodo(title: String!, completed: Boolean!, userId: Int!): Todo!
+	createTag(name: String!, isVisible: Boolean): Tag!
+	updateUser(
+		id: Int!
+		username: String
+		email: String
+		firstName: String
+		lastName: String
+		password: String
+	): User!
+	updateTodo(
+		id: Int!
+		title: String
+		description: Boolean
+		completed: Boolean
+	): Todo!
+	deleteUser(id: Int!): User!
+	deleteTodo(id: Int!): Todo!
+	deleteTag(id: Int!): Tag!
+}
+
+type Subscription {
+	todoCreated: Todo
+	todoUpdated: Todo
+	todoDeleted: Todo
+}
