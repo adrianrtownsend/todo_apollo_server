@@ -1,46 +1,39 @@
 type Tag {
-	id: Int
-	name: String!
-	visible: Boolean!
+	id: ID
+	name: String
+	isVisible: Boolean
 }
 
 type Todo {
-	id: Int
-	title: String!
+	id: ID
+	title: String
 	description: String
-	completed: Boolean!
-	user: User!
+	isCompleted: Boolean
+	user: User
+	tags: [Tag]
 }
 
 type User {
-	id: Int
-	firstName: String!
-	lastName: String!
-	username: String!
-	email: String!
-	password: String!
-	visible: Boolean!
+	id: ID
+	firstName: String
+	lastName: String
+	username: String
+	email: String
+	password: String
+	isPrivate: Boolean
 	todos: [Todo]
-}
-
-type Book {
-	title: String
-	author: String
+	followers: [User]
 }
 
 type Query {
-	user(id: Int): User
-	todo(id: Int): Todo
-	getUsers: [User]
-	getUserById(id: String): User
-	getTodos: [Todo]
-	getTodosByUserId(userId: String): [Todo]
+	user(id: Int!): User
+	todo(id: Int!): Todo
+	tag(id: Int!): Tag
 	users: [User]
 	todos: [Todo]
-	books: [Book]
-	getUsersRaw: [User]
-	getTodosRaw: [Todo]
-	getTags: [Tag]
+	tags: [Tag]
+	todosByUserId(userId: Int!): [Todo]
+	userTodos(id: Int!, isCompleted: Boolean, tagIDs: [ID!]): [Todo]
 }
 
 type Mutation {
@@ -51,8 +44,8 @@ type Mutation {
 		lastName: String!
 		password: String!
 	): User!
-	createTodo(title: String!, completed: Boolean!, userId: Int!): Todo!
-	createTag(name: String!, isVisible: Boolean): Tag!
+	createTodo(title: String!, userId: Int!): Todo
+	createTag(name: String!, isVisible: Boolean): Tag
 	updateUser(
 		id: Int!
 		username: String
@@ -65,7 +58,7 @@ type Mutation {
 		id: Int!
 		title: String
 		description: Boolean
-		completed: Boolean
+		isCompleted: Boolean
 	): Todo!
 	deleteUser(id: Int!): User!
 	deleteTodo(id: Int!): Todo!
@@ -76,4 +69,5 @@ type Subscription {
 	todoCreated: Todo
 	todoUpdated: Todo
 	todoDeleted: Todo
+	tagUpdated: Tag
 }

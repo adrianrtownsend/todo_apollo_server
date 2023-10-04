@@ -5,17 +5,18 @@ import { MutationCreateTodoArgs } from '../../types/graphql.js';
 const pubsub = new PubSub();
 
 const todoMutations = {
-	createTodo: async (
-		_: any,
-		{ title, completed, userId }: MutationCreateTodoArgs
-	) => {
+	createTodo: async (_: any, { title, userId }: MutationCreateTodoArgs) => {
 		const user = await repositories.userRepository.findOneBy({ id: userId });
 
 		if (!user) {
 			throw new Error(`User with ID ${userId} not found`);
 		}
 
-		const todo = repositories.todoRepository.create({ title, completed, user });
+		const todo = repositories.todoRepository.create({
+			title,
+			completed: false,
+			user,
+		});
 		await repositories.todoRepository.save(todo);
 
 		// Publish a subscription event
