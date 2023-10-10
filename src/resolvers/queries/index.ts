@@ -2,29 +2,27 @@
 import repositories from '../../repositories/index.js';
 
 const queries = {
-	getUsers: async () => {
+	users: async () => {
 		return repositories.userRepository.find();
 	},
-	getUserById: async (_: any, { id }: { id: number }) => {
+	user: async (_: any, { id }: { id: number }) => {
 		return repositories.userRepository.findOneBy({ id: id });
 	},
-	getTodos: async () => {
+	todos: async () => {
 		return repositories.todoRepository.find();
 	},
-	getTodosByUserId: async (_: any, { userId }: { userId: number }) => {
+	todo: async (_: any, { id }: { id: number }) => {
+		return repositories.todoRepository.findOneBy({ id: id });
+	},
+	todosByUserId: async (_: any, { userId }: { userId: number }) => {
 		return repositories.todoRepository.findBy({ id: userId });
 	},
-	getTags: async () => {
+	tags: async () => {
 		return repositories.tagRepository.find();
 	},
-	// getUsersRaw: async () => {
-	// 	const [rows, fields] = await connection.query(`SELECT * FROM user`);
-	// 	return rows;
-	// },
-	// getTodosRaw: async () => {
-	// 	const [rows, fields] = await connection.query(`SELECT * FROM Todo`);
-	// 	return rows;
-	// },
+	tag: async (_: any, { id }: { id: number }) => {
+		return repositories.tagRepository.findOneBy({ id: id });
+	},
 };
 
 export default queries;

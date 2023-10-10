@@ -24,6 +24,7 @@ export type Mutation = {
   deleteTag: Tag;
   deleteTodo: Todo;
   deleteUser: User;
+  updateTag: Tag;
   updateTodo: Todo;
   updateUser: User;
 };
@@ -65,6 +66,13 @@ export type MutationDeleteUserArgs = {
 };
 
 
+export type MutationUpdateTagArgs = {
+  id: Scalars['Int']['input'];
+  isVisible?: InputMaybe<Scalars['Boolean']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+
 export type MutationUpdateTodoArgs = {
   description?: InputMaybe<Scalars['Boolean']['input']>;
   id: Scalars['Int']['input'];
@@ -90,7 +98,6 @@ export type Query = {
   todos?: Maybe<Array<Maybe<Todo>>>;
   todosByUserId?: Maybe<Array<Maybe<Todo>>>;
   user?: Maybe<User>;
-  userTodos?: Maybe<Array<Maybe<Todo>>>;
   users?: Maybe<Array<Maybe<User>>>;
 };
 
@@ -114,13 +121,6 @@ export type QueryUserArgs = {
   id: Scalars['Int']['input'];
 };
 
-
-export type QueryUserTodosArgs = {
-  id: Scalars['Int']['input'];
-  isCompleted?: InputMaybe<Scalars['Boolean']['input']>;
-  tagIDs?: InputMaybe<Array<Scalars['ID']['input']>>;
-};
-
 export type Subscription = {
   __typename?: 'Subscription';
   tagUpdated?: Maybe<Tag>;
@@ -131,7 +131,7 @@ export type Subscription = {
 
 export type Tag = {
   __typename?: 'Tag';
-  id?: Maybe<Scalars['ID']['output']>;
+  id?: Maybe<Scalars['Int']['output']>;
   isVisible?: Maybe<Scalars['Boolean']['output']>;
   name?: Maybe<Scalars['String']['output']>;
 };
@@ -139,7 +139,7 @@ export type Tag = {
 export type Todo = {
   __typename?: 'Todo';
   description?: Maybe<Scalars['String']['output']>;
-  id?: Maybe<Scalars['ID']['output']>;
+  id?: Maybe<Scalars['Int']['output']>;
   isCompleted?: Maybe<Scalars['Boolean']['output']>;
   tags?: Maybe<Array<Maybe<Tag>>>;
   title?: Maybe<Scalars['String']['output']>;
@@ -151,12 +151,18 @@ export type User = {
   email?: Maybe<Scalars['String']['output']>;
   firstName?: Maybe<Scalars['String']['output']>;
   followers?: Maybe<Array<Maybe<User>>>;
-  id?: Maybe<Scalars['ID']['output']>;
+  id?: Maybe<Scalars['Int']['output']>;
   isPrivate?: Maybe<Scalars['Boolean']['output']>;
   lastName?: Maybe<Scalars['String']['output']>;
   password?: Maybe<Scalars['String']['output']>;
   todos?: Maybe<Array<Maybe<Todo>>>;
   username?: Maybe<Scalars['String']['output']>;
+};
+
+export type TagQueries = {
+  __typename?: 'tagQueries';
+  tagById?: Maybe<Tag>;
+  tags?: Maybe<Array<Maybe<Tag>>>;
 };
 
 
@@ -231,7 +237,6 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
-  ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
@@ -240,12 +245,12 @@ export type ResolversTypes = {
   Tag: ResolverTypeWrapper<Tag>;
   Todo: ResolverTypeWrapper<Todo>;
   User: ResolverTypeWrapper<User>;
+  tagQueries: ResolverTypeWrapper<TagQueries>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
-  ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
   Mutation: {};
   Query: {};
@@ -254,6 +259,7 @@ export type ResolversParentTypes = {
   Tag: Tag;
   Todo: Todo;
   User: User;
+  tagQueries: TagQueries;
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
@@ -263,6 +269,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteTag?: Resolver<ResolversTypes['Tag'], ParentType, ContextType, RequireFields<MutationDeleteTagArgs, 'id'>>;
   deleteTodo?: Resolver<ResolversTypes['Todo'], ParentType, ContextType, RequireFields<MutationDeleteTodoArgs, 'id'>>;
   deleteUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'id'>>;
+  updateTag?: Resolver<ResolversTypes['Tag'], ParentType, ContextType, RequireFields<MutationUpdateTagArgs, 'id'>>;
   updateTodo?: Resolver<ResolversTypes['Todo'], ParentType, ContextType, RequireFields<MutationUpdateTodoArgs, 'id'>>;
   updateUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'id'>>;
 };
@@ -274,7 +281,6 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   todos?: Resolver<Maybe<Array<Maybe<ResolversTypes['Todo']>>>, ParentType, ContextType>;
   todosByUserId?: Resolver<Maybe<Array<Maybe<ResolversTypes['Todo']>>>, ParentType, ContextType, RequireFields<QueryTodosByUserIdArgs, 'userId'>>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
-  userTodos?: Resolver<Maybe<Array<Maybe<ResolversTypes['Todo']>>>, ParentType, ContextType, RequireFields<QueryUserTodosArgs, 'id'>>;
   users?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
 };
 
@@ -286,7 +292,7 @@ export type SubscriptionResolvers<ContextType = any, ParentType extends Resolver
 };
 
 export type TagResolvers<ContextType = any, ParentType extends ResolversParentTypes['Tag'] = ResolversParentTypes['Tag']> = {
-  id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   isVisible?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -294,7 +300,7 @@ export type TagResolvers<ContextType = any, ParentType extends ResolversParentTy
 
 export type TodoResolvers<ContextType = any, ParentType extends ResolversParentTypes['Todo'] = ResolversParentTypes['Todo']> = {
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   isCompleted?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   tags?: Resolver<Maybe<Array<Maybe<ResolversTypes['Tag']>>>, ParentType, ContextType>;
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -306,12 +312,18 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   firstName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   followers?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
-  id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   isPrivate?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   lastName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   password?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   todos?: Resolver<Maybe<Array<Maybe<ResolversTypes['Todo']>>>, ParentType, ContextType>;
   username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type TagQueriesResolvers<ContextType = any, ParentType extends ResolversParentTypes['tagQueries'] = ResolversParentTypes['tagQueries']> = {
+  tagById?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType>;
+  tags?: Resolver<Maybe<Array<Maybe<ResolversTypes['Tag']>>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -322,5 +334,6 @@ export type Resolvers<ContextType = any> = {
   Tag?: TagResolvers<ContextType>;
   Todo?: TodoResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
+  tagQueries?: TagQueriesResolvers<ContextType>;
 };
 

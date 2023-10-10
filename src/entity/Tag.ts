@@ -10,5 +10,5 @@ export class Tag {
 	name: string;
 
 	@Column()
-	visible: boolean;
+	isVisible: boolean;
 }

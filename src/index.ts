@@ -7,32 +7,16 @@ import { readFileSync } from 'fs';
 import 'reflect-metadata';
 import { AppDataSource } from './data-source.js';
 import { seedDatabase } from './seeders/index.js';
-import * as mysql from 'mysql2/promise';
 
 // Initialize TypeORM data source
 AppDataSource.initialize()
 	.then(() => {
-		console.log('Data Source has been initialized!');
-		// seedDatabase();
+		seedDatabase();
+		// console.log('Data Source has been initialized!');
 	})
 	.catch((err) => {
 		console.error('Error during Data Source initialization', err);
 	});
-
-// export const connection = await mysql.createConnection({
-// 	host: process.env.MYSQL_HOST,
-// 	user: process.env.MYSQL_USER,
-// 	database: process.env.MYSQL_DATABASE,
-// 	password: process.env.MYSQL_PASSWORD,
-// });
-// const showTables = await connection.query(`SHOW TABLES`);
-// console.log('SHOW TABLES: ', showTables);
-
-// const selectUsers = await connection.query(`SELECT * FROM user`);
-// console.log('SELECT * FROM user: ', selectUsers);
-
-// const selectTodos = await connection.query(`SELECT * FROM todo`);
-// console.log('SELECT * FROM todo: ', selectTodos);
 
 // A schema is a collection of type definitions (hence "typeDefs")
 // that together define the "shape" of queries that are executed against
