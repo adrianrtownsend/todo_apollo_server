@@ -10,7 +10,7 @@
 		"seed:compile": "npm run compile && ./dist/src/seeders/index.js",
 		"start:compile": "npm run compile && node ./dist/src/index.js",
 		"start": "node ./dist/src/index.js",
-		"watch": "concurrently  --names \"CodeGen,TS,Nodemon\" -c \"bgYellow,bgBlue,bgMagenta\" \"graphql-codegen --watch 'src/**/*.ts'\"  \"tsc -w \" \"nodemon ./dist/index.js \"",
+		"watch": "concurrently  --names \"CodeGen,TS,Nodemon\" -c \"bgYellow,bgBlue,bgMagenta\" \"npm run compile --watch 'src/**/*.ts'\"  \"tsc -w \" \"nodemon ./dist/src/index.js \"",
 		"prepare": "husky install"
 	},
 	"keywords": [],
@@ -19,7 +19,9 @@
 	"type": "module",
 	"dependencies": {
 		"@apollo/server": "^4.9.3",
+		"class-validator": "^0.14.0",
 		"dotenv": "^16.3.1",
+		"firebase-admin": "^11.11.0",
 		"graphql": "^16.8.0",
 		"graphql-subscriptions": "^2.0.0",
 		"mongoose": "^7.5.2",
