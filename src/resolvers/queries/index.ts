@@ -6,13 +6,13 @@ const queries = {
 		return repositories.userRepository.find();
 	},
 	user: async (_: any, { id }: { id: number }) => {
-		return repositories.userRepository.findOneBy({ id: id });
+		return repositories.userRepository.findOneBy({ id });
 	},
 	todos: async () => {
 		return repositories.todoRepository.find();
 	},
 	todo: async (_: any, { id }: { id: number }) => {
-		return repositories.todoRepository.findOneBy({ id: id });
+		return repositories.todoRepository.findOneBy({ id });
 	},
 	todosByUserId: async (_: any, { userId }: { userId: number }) => {
 		return repositories.todoRepository.findBy({ id: userId });
@@ -21,7 +21,7 @@ const queries = {
 		return repositories.tagRepository.find();
 	},
 	tag: async (_: any, { id }: { id: number }) => {
-		return repositories.tagRepository.findOneBy({ id: id });
+		return repositories.tagRepository.findOneBy({ id });
 	},
 };
 

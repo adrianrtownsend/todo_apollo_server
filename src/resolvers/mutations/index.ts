@@ -3,7 +3,6 @@ import { PubSub } from 'graphql-subscriptions';
 import {
 	MutationCreateTodoArgs,
 	MutationCreateUserArgs,
-	User,
 } from '../../types/graphql.js';
 
 const pubsub = new PubSub();
@@ -11,7 +10,14 @@ const pubsub = new PubSub();
 const mutations = {
 	createUser: async (
 		_: any,
-		{ username, email, firstName, lastName, password }: MutationCreateUserArgs
+		{
+			username,
+			email,
+			firstName,
+			lastName,
+			password,
+			isPrivate = false,
+		}: MutationCreateUserArgs
 	) => {
 		const user = repositories.userRepository.create({
 			username,
@@ -19,13 +25,14 @@ const mutations = {
 			firstName,
 			lastName,
 			password,
+			isPrivate,
 		});
 		await repositories.userRepository.save(user);
 		return user;
 	},
 	updateUser: async (
 		_: any,
-		{ id, username, email, firstName, lastName, password }
+		{ id, username, email, firstName, lastName, password, isPrivate }
 	) => {
 		const user = await repositories.userRepository.findOneBy({ id });
 
@@ -39,6 +46,7 @@ const mutations = {
 			firstName: firstName ?? user.firstName,
 			lastName: lastName ?? user.lastName,
 			password: password ?? user.password,
+			isPrivate: isPrivate ?? user.isPrivate,
 		});
 	},
 	deleteUser: async (_: any, { id }) => {
