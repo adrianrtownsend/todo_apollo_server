@@ -1,5 +1,4 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToMany } from 'typeorm';
-import { Todo } from './Todo';
 
 @Entity()
 export class Tag {
