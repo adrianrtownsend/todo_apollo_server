@@ -1,0 +1,13 @@
+{
+	"type": "",
+	"projectId": "",
+	"privateKeyId": "",
+	"privateKey": "",
+	"clientEmail": "",
+	"clientId": "",
+	"authUri": "",
+	"tokenUri": "",
+	"authProviderX509CertUrl": "",
+	"clientX509CertUrl": "",
+	"universeDomain": ""
+}
