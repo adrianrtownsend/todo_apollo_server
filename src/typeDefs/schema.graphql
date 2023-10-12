@@ -48,6 +48,7 @@ type Mutation {
 		firstName: String!
 		lastName: String!
 		password: String!
+		isPrivate: Boolean
 	): User!
 	updateUser(
 		id: Int!
@@ -56,6 +57,7 @@ type Mutation {
 		firstName: String
 		lastName: String
 		password: String
+		isPrivate: Boolean
 	): User!
 	deleteUser(id: Int!): User!
 	createTodo(title: String!, userId: Int!): Todo
