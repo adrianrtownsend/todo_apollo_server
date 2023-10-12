@@ -11,8 +11,8 @@ import { seedDatabase } from './seeders/index.js';
 // Initialize TypeORM data source
 AppDataSource.initialize()
 	.then(() => {
-		seedDatabase();
-		// console.log('Data Source has been initialized!');
+		// seedDatabase();
+		console.log('Data Source has been initialized!');
 	})
 	.catch((err) => {
 		console.error('Error during Data Source initialization', err);
