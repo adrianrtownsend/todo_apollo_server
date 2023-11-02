@@ -1,5 +1,6 @@
 import admin from 'firebase-admin';
 import serviceAccount from '../../firebase-admin.config.json' assert { type: 'json' };
+import { UserRecord } from 'firebase-admin/lib/auth/user-record';
 
 const { auth } = admin.initializeApp({
 	credential: admin.credential.cert(serviceAccount),
@@ -7,12 +8,12 @@ const { auth } = admin.initializeApp({
 
 interface ICreateUserArgs {
 	email: string;
-	emailVerified: boolean;
-	phoneNumber: string;
+	emailVerified?: boolean;
+	phoneNumber?: string;
 	password: string;
 	displayName: string;
 	photoURL?: string;
-	disabled: boolean;
+	disabled?: boolean;
 }
 
 interface IUpdateUserArgs {
@@ -26,19 +27,20 @@ interface IUpdateUserArgs {
 }
 
 export const getUser = (uid: string) => {
-	auth()
-		.getUser(uid)
-		.then((userRecord) => {
-			// See the UserRecord reference doc for the contents of userRecord.
-			console.log(`Successfully fetched user data: ${userRecord.toJSON()}`);
-			return userRecord;
-		})
-		.catch((error) => {
-			console.log('Error fetching user data:', error);
-		});
+	return new Promise((resolve, reject) => {
+		auth()
+			.getUser(uid)
+			.then((userRecord) => {
+				// See the UserRecord reference doc for the contents of userRecord.
+				console.log(`Successfully fetched user data: ${userRecord.toJSON()}`);
+				resolve(userRecord);
+			})
+			.catch((error) => {
+				console.log('Error fetching user data:', error);
+				reject(error);
+			});
+	});
 };
-
-export const getUsers = () => {};
 
 export const getUserByEmail = (email: string) => {
 	auth()
@@ -61,30 +63,59 @@ export const createUser = ({
 	displayName,
 	photoURL = '',
 	disabled = false,
-}: ICreateUserArgs) => {
-	auth()
-		.createUser({
-			email,
-			emailVerified,
-			phoneNumber,
-			password,
-			displayName,
-			photoURL,
-			disabled,
-		})
-		.then((userRecord) => {
-			// See the UserRecord reference doc for the contents of userRecord.
-			console.log('Successfully created new user:', userRecord.uid);
-			return userRecord;
-		})
-		.catch((error) => {
-			console.log('Error creating new user:', error);
-		});
+}: ICreateUserArgs): Promise<UserRecord> => {
+	return new Promise((resolve, reject) => {
+		auth()
+			.createUser({
+				email,
+				emailVerified,
+				phoneNumber,
+				password,
+				displayName,
+				photoURL,
+				disabled,
+			})
+			.then((userRecord) => {
+				// See the UserRecord reference doc for the contents of userRecord.
+				console.log('Successfully created new user:', userRecord.uid);
+				resolve(userRecord);
+			})
+			.catch((error) => {
+				console.log('Error creating new user:', error);
+				reject(error);
+			});
+	});
 };
 
-export const updateUser = () => {
-	// lookup user
-	// update user
+export const updateUser = (uid: string, args: IUpdateUserArgs) => {
+	return new Promise((resolve, reject) => {
+		// lookup user
+		getUser(uid)
+			.then((userRecord) => {
+				// update user
+				const updateUserArgs = {};
+
+				// get all non empty object fields
+				Object.entries(args).forEach(([key, val]) => {
+					if (val) updateUserArgs[key] = val;
+				});
+				auth()
+					.updateUser(uid, updateUserArgs)
+					.then((userRecord) => {
+						// See the UserRecord reference doc for the contents of userRecord.
+						console.log('Successfully updated user', userRecord.toJSON());
+						resolve(userRecord);
+					})
+					.catch((error) => {
+						console.log('Error updating user:', error);
+						reject(error);
+					});
+			})
+			.catch((error) => {
+				console.error('Error fetching user data: ', error);
+				reject(error);
+			});
+	});
 };
 
 export const deleteUser = (uid: string) => {
@@ -99,27 +130,56 @@ export const deleteUser = (uid: string) => {
 };
 
 export const deleteUsers = (uids: string[]) => {
-	auth()
-		.deleteUsers(uids)
-		.then((deleteUsersResult) => {
-			if (!deleteUsersResult.successCount) {
-				console.log(`No users deleted`);
-			}
+	return new Promise((resolve, reject) => {
+		auth()
+			.deleteUsers(uids)
+			.then((deleteUsersResult) => {
+				if (!deleteUsersResult.successCount) {
+					resolve(`No users deleted`);
+				}
 
-			if (deleteUsersResult.successCount) {
-				console.log(
-					`Successfully deleted ${deleteUsersResult.successCount} users`
-				);
-			}
+				if (deleteUsersResult.successCount) {
+					resolve(
+						`Successfully deleted ${deleteUsersResult.successCount} users`
+					);
+				}
 
-			if (!deleteUsersResult.failureCount) {
-				console.log(`Failed to delete ${deleteUsersResult.failureCount} users`);
-				deleteUsersResult.errors.forEach((err) => {
-					console.log(err.error.toJSON());
-				});
-			}
-		})
-		.catch((error) => {
-			console.log('Error deleting users:', error);
-		});
+				if (!deleteUsersResult.failureCount) {
+					deleteUsersResult.errors.forEach((err) => {
+						console.log(err.error.toJSON());
+					});
+					resolve(`Failed to delete ${deleteUsersResult.failureCount} users`);
+				}
+			})
+			.catch((error) => {
+				reject(error);
+			});
+	});
+};
+
+export const createCustomToken = (uid: string) => {
+	return new Promise((resolve, reject) => {
+		auth()
+			.createCustomToken(uid)
+			.then((customToken) => {
+				// Send token back to client
+				resolve(customToken);
+			})
+			.catch((error) => {
+				reject(error);
+			});
+	});
+};
+
+export const verifyToken = (idToken: string) => {
+	return new Promise((reject, resolve) => {
+		auth()
+			.verifyIdToken(idToken)
+			.then((decodedToken) => {
+				resolve(decodedToken.uid);
+			})
+			.catch((error) => {
+				reject(error);
+			});
+	});
 };
