@@ -23,6 +23,7 @@ type User {
 	isPrivate: Boolean
 	todos: [Todo]
 	followers: [User]
+	auth_firebase_uid: String
 }
 
 type tagQueries {
@@ -60,11 +61,11 @@ type Mutation {
 		isPrivate: Boolean
 	): User!
 	deleteUser(id: Int!): User!
-	createTodo(title: String!, userId: Int!): Todo
+	createTodo(title: String!, userId: Int!, description: String): Todo
 	updateTodo(
 		id: Int!
 		title: String
-		description: Boolean
+		description: String
 		isCompleted: Boolean
 	): Todo!
 	deleteTodo(id: Int!): Todo!

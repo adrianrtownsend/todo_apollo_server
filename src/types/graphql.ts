@@ -37,6 +37,7 @@ export type MutationCreateTagArgs = {
 
 
 export type MutationCreateTodoArgs = {
+  description?: InputMaybe<Scalars['String']['input']>;
   title: Scalars['String']['input'];
   userId: Scalars['Int']['input'];
 };
@@ -75,7 +76,7 @@ export type MutationUpdateTagArgs = {
 
 
 export type MutationUpdateTodoArgs = {
-  description?: InputMaybe<Scalars['Boolean']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['Int']['input'];
   isCompleted?: InputMaybe<Scalars['Boolean']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
@@ -150,6 +151,7 @@ export type Todo = {
 
 export type User = {
   __typename?: 'User';
+  auth_firebase_uid?: Maybe<Scalars['String']['output']>;
   email?: Maybe<Scalars['String']['output']>;
   firstName?: Maybe<Scalars['String']['output']>;
   followers?: Maybe<Array<Maybe<User>>>;
@@ -311,6 +313,7 @@ export type TodoResolvers<ContextType = any, ParentType extends ResolversParentT
 };
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
+  auth_firebase_uid?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   firstName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   followers?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
