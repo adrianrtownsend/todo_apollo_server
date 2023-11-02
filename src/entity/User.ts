@@ -5,6 +5,8 @@ import {
 	OneToMany,
 	ManyToMany,
 	JoinTable,
+	OneToOne,
+	JoinColumn,
 } from 'typeorm';
 import {
 	Contains,
@@ -57,4 +59,9 @@ export class User {
 
 	@ManyToMany(() => User, (user) => user.followers)
 	following: User[];
+
+	@Column({
+		nullable: true,
+	})
+	auth_firebase_uid: string;
 }
