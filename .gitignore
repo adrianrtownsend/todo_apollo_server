@@ -29,3 +29,6 @@ dist-ssr
 
 # Firebase files
 firebase-admin.config.json
+
+# Example Scratch files
+examples
