@@ -20,13 +20,10 @@ export type Mutation = {
   __typename?: 'Mutation';
   createTag?: Maybe<Tag>;
   createTodo?: Maybe<Todo>;
-  createUser: User;
   deleteTag: Tag;
   deleteTodo: Todo;
-  deleteUser: User;
   updateTag: Tag;
   updateTodo: Todo;
-  updateUser: User;
 };
 
 
@@ -38,18 +35,8 @@ export type MutationCreateTagArgs = {
 
 export type MutationCreateTodoArgs = {
   description?: InputMaybe<Scalars['String']['input']>;
+  isCompleted?: InputMaybe<Scalars['Boolean']['input']>;
   title: Scalars['String']['input'];
-  userId: Scalars['Int']['input'];
-};
-
-
-export type MutationCreateUserArgs = {
-  email: Scalars['String']['input'];
-  firstName: Scalars['String']['input'];
-  isPrivate?: InputMaybe<Scalars['Boolean']['input']>;
-  lastName: Scalars['String']['input'];
-  password: Scalars['String']['input'];
-  username: Scalars['String']['input'];
 };
 
 
@@ -59,11 +46,6 @@ export type MutationDeleteTagArgs = {
 
 
 export type MutationDeleteTodoArgs = {
-  id: Scalars['Int']['input'];
-};
-
-
-export type MutationDeleteUserArgs = {
   id: Scalars['Int']['input'];
 };
 
@@ -82,17 +64,6 @@ export type MutationUpdateTodoArgs = {
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
-
-export type MutationUpdateUserArgs = {
-  email?: InputMaybe<Scalars['String']['input']>;
-  firstName?: InputMaybe<Scalars['String']['input']>;
-  id: Scalars['Int']['input'];
-  isPrivate?: InputMaybe<Scalars['Boolean']['input']>;
-  lastName?: InputMaybe<Scalars['String']['input']>;
-  password?: InputMaybe<Scalars['String']['input']>;
-  username?: InputMaybe<Scalars['String']['input']>;
-};
-
 export type Query = {
   __typename?: 'Query';
   tag?: Maybe<Tag>;
@@ -100,8 +71,6 @@ export type Query = {
   todo?: Maybe<Todo>;
   todos?: Maybe<Array<Maybe<Todo>>>;
   todosByUserId?: Maybe<Array<Maybe<Todo>>>;
-  user?: Maybe<User>;
-  users?: Maybe<Array<Maybe<User>>>;
 };
 
 
@@ -116,12 +85,7 @@ export type QueryTodoArgs = {
 
 
 export type QueryTodosByUserIdArgs = {
-  userId: Scalars['Int']['input'];
-};
-
-
-export type QueryUserArgs = {
-  id: Scalars['Int']['input'];
+  userId: Scalars['String']['input'];
 };
 
 export type Subscription = {
@@ -146,21 +110,7 @@ export type Todo = {
   isCompleted?: Maybe<Scalars['Boolean']['output']>;
   tags?: Maybe<Array<Maybe<Tag>>>;
   title?: Maybe<Scalars['String']['output']>;
-  user?: Maybe<User>;
-};
-
-export type User = {
-  __typename?: 'User';
-  auth_firebase_uid?: Maybe<Scalars['String']['output']>;
-  email?: Maybe<Scalars['String']['output']>;
-  firstName?: Maybe<Scalars['String']['output']>;
-  followers?: Maybe<Array<Maybe<User>>>;
-  id?: Maybe<Scalars['Int']['output']>;
-  isPrivate?: Maybe<Scalars['Boolean']['output']>;
-  lastName?: Maybe<Scalars['String']['output']>;
-  password?: Maybe<Scalars['String']['output']>;
-  todos?: Maybe<Array<Maybe<Todo>>>;
-  username?: Maybe<Scalars['String']['output']>;
+  userId?: Maybe<Scalars['String']['output']>;
 };
 
 export type TagQueries = {
@@ -248,7 +198,6 @@ export type ResolversTypes = {
   Subscription: ResolverTypeWrapper<{}>;
   Tag: ResolverTypeWrapper<Tag>;
   Todo: ResolverTypeWrapper<Todo>;
-  User: ResolverTypeWrapper<User>;
   tagQueries: ResolverTypeWrapper<TagQueries>;
 };
 
@@ -262,20 +211,16 @@ export type ResolversParentTypes = {
   Subscription: {};
   Tag: Tag;
   Todo: Todo;
-  User: User;
   tagQueries: TagQueries;
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createTag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<MutationCreateTagArgs, 'name'>>;
-  createTodo?: Resolver<Maybe<ResolversTypes['Todo']>, ParentType, ContextType, RequireFields<MutationCreateTodoArgs, 'title' | 'userId'>>;
-  createUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'email' | 'firstName' | 'lastName' | 'password' | 'username'>>;
+  createTodo?: Resolver<Maybe<ResolversTypes['Todo']>, ParentType, ContextType, RequireFields<MutationCreateTodoArgs, 'title'>>;
   deleteTag?: Resolver<ResolversTypes['Tag'], ParentType, ContextType, RequireFields<MutationDeleteTagArgs, 'id'>>;
   deleteTodo?: Resolver<ResolversTypes['Todo'], ParentType, ContextType, RequireFields<MutationDeleteTodoArgs, 'id'>>;
-  deleteUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'id'>>;
   updateTag?: Resolver<ResolversTypes['Tag'], ParentType, ContextType, RequireFields<MutationUpdateTagArgs, 'id'>>;
   updateTodo?: Resolver<ResolversTypes['Todo'], ParentType, ContextType, RequireFields<MutationUpdateTodoArgs, 'id'>>;
-  updateUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'id'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
@@ -284,8 +229,6 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   todo?: Resolver<Maybe<ResolversTypes['Todo']>, ParentType, ContextType, RequireFields<QueryTodoArgs, 'id'>>;
   todos?: Resolver<Maybe<Array<Maybe<ResolversTypes['Todo']>>>, ParentType, ContextType>;
   todosByUserId?: Resolver<Maybe<Array<Maybe<ResolversTypes['Todo']>>>, ParentType, ContextType, RequireFields<QueryTodosByUserIdArgs, 'userId'>>;
-  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
-  users?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
 };
 
 export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
@@ -308,21 +251,7 @@ export type TodoResolvers<ContextType = any, ParentType extends ResolversParentT
   isCompleted?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   tags?: Resolver<Maybe<Array<Maybe<ResolversTypes['Tag']>>>, ParentType, ContextType>;
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
-  auth_firebase_uid?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  firstName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  followers?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
-  id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  isPrivate?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  lastName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  password?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  todos?: Resolver<Maybe<Array<Maybe<ResolversTypes['Todo']>>>, ParentType, ContextType>;
-  username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  userId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -338,7 +267,6 @@ export type Resolvers<ContextType = any> = {
   Subscription?: SubscriptionResolvers<ContextType>;
   Tag?: TagResolvers<ContextType>;
   Todo?: TodoResolvers<ContextType>;
-  User?: UserResolvers<ContextType>;
   tagQueries?: TagQueriesResolvers<ContextType>;
 };
 

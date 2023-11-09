@@ -6,12 +6,13 @@ import { makeExecutableSchema } from '@graphql-tools/schema';
 import { readFileSync } from 'fs';
 import 'reflect-metadata';
 import { AppDataSource } from './data-source.js';
-import { seedDatabase } from './seeders/index.js';
+import { getUser, verifyToken } from './firebase/index.js';
+import { GraphQLError } from 'graphql';
+import { authenticateUser } from 'helpers/index.js';
 
 // Initialize TypeORM data source
 AppDataSource.initialize()
 	.then(() => {
-		// seedDatabase();
 		console.log('Data Source has been initialized!');
 	})
 	.catch((err) => {
@@ -33,7 +34,8 @@ const typeDefs = readFileSync('./src/typeDefs/schema.graphql', {
 const server = new ApolloServer({
 	// addMocksToSchema accepts a schema instance and provides
 	// mocked data for each field in the schema
-	schema: makeExecutableSchema({ typeDefs, resolvers }),
+	typeDefs,
+	resolvers,
 });
 
 // Passing an ApolloServer instance to the `startStandaloneServer` function:
@@ -42,6 +44,12 @@ const server = new ApolloServer({
 //  3. prepares your app to handle incoming requests
 const { url } = await startStandaloneServer(server, {
 	listen: { port: 4000 },
+	context: async ({ req }) => {
+		// Verify User
+		const uid = await authenticateUser(req.headers.authorization || '');
+		const user = await getUser(uid);
+		return { user };
+	},
 });
 
 console.log(`🚀  Server ready at: ${url}`);

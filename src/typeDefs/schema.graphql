@@ -9,21 +9,8 @@ type Todo {
 	title: String
 	description: String
 	isCompleted: Boolean
-	user: User
+	userId: String
 	tags: [Tag]
-}
-
-type User {
-	id: Int
-	username: String
-	email: String
-	firstName: String
-	lastName: String
-	password: String
-	isPrivate: Boolean
-	todos: [Todo]
-	followers: [User]
-	auth_firebase_uid: String
 }
 
 type tagQueries {
@@ -32,36 +19,15 @@ type tagQueries {
 }
 
 type Query {
-	users: [User]
-	user(id: Int!): User
 	todos: [Todo]
 	todo(id: Int!): Todo
-	todosByUserId(userId: Int!): [Todo]
+	todosByUserId(userId: String!): [Todo]
 	tags: [Tag]
 	tag(id: Int!): Tag
-	# userTodos(id: Int!, isCompleted: Boolean, tagIDs: [ID!]): [Todo]
 }
 
 type Mutation {
-	createUser(
-		username: String!
-		email: String!
-		firstName: String!
-		lastName: String!
-		password: String!
-		isPrivate: Boolean
-	): User!
-	updateUser(
-		id: Int!
-		username: String
-		email: String
-		firstName: String
-		lastName: String
-		password: String
-		isPrivate: Boolean
-	): User!
-	deleteUser(id: Int!): User!
-	createTodo(title: String!, userId: Int!, description: String): Todo
+	createTodo(title: String!, description: String, isCompleted: Boolean): Todo
 	updateTodo(
 		id: Int!
 		title: String

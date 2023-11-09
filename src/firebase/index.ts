@@ -26,7 +26,7 @@ interface IUpdateUserArgs {
 	disabled?: boolean;
 }
 
-export const getUser = (uid: string) => {
+export const getUser = (uid: string): Promise<UserRecord> => {
 	return new Promise((resolve, reject) => {
 		auth()
 			.getUser(uid)
@@ -171,7 +171,7 @@ export const createCustomToken = (uid: string) => {
 	});
 };
 
-export const verifyToken = (idToken: string) => {
+export const verifyToken = (idToken: string): Promise<string> => {
 	return new Promise((reject, resolve) => {
 		auth()
 			.verifyIdToken(idToken)

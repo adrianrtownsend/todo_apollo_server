@@ -2,7 +2,7 @@ import 'dotenv/config';
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import { Todo } from './entity/Todo.js';
-import { User } from './entity/User.js';
+import { Tag } from './entity/Tag.js';
 
 export const AppDataSource = new DataSource({
 	type: 'mysql',
@@ -12,7 +12,7 @@ export const AppDataSource = new DataSource({
 	password: process.env.MYSQL_PASSWORD,
 	database: process.env.MYSQL_DATABASE,
 	logging: true,
-	entities: [User, Todo],
+	entities: [Todo, Tag],
 	migrations: [],
 	subscribers: [],
 	synchronize: true,
