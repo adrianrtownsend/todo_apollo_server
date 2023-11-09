@@ -8,7 +8,7 @@ import 'reflect-metadata';
 import { AppDataSource } from './data-source.js';
 import { getUser, verifyToken } from './firebase/index.js';
 import { GraphQLError } from 'graphql';
-import { authenticateUser } from 'helpers/index.js';
+import { authenticateUser } from './helpers/index.js';
 
 // Initialize TypeORM data source
 AppDataSource.initialize()

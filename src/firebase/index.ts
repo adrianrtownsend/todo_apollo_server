@@ -118,7 +118,7 @@ export const updateUser = (uid: string, args: IUpdateUserArgs) => {
 	});
 };
 
-export const deleteUser = (uid: string) => {
+export const deleteUser = (uid: string) =>
 	auth()
 		.deleteUser(uid)
 		.then(() => {
@@ -127,7 +127,6 @@ export const deleteUser = (uid: string) => {
 		.catch((error) => {
 			console.log('Error deleting user:', error);
 		});
-};
 
 export const deleteUsers = (uids: string[]) => {
 	return new Promise((resolve, reject) => {
@@ -157,29 +156,25 @@ export const deleteUsers = (uids: string[]) => {
 	});
 };
 
-export const createCustomToken = (uid: string) => {
-	return new Promise((resolve, reject) => {
-		auth()
-			.createCustomToken(uid)
-			.then((customToken) => {
-				// Send token back to client
-				resolve(customToken);
-			})
-			.catch((error) => {
-				reject(error);
-			});
-	});
-};
+export const createCustomToken = (uid: string) =>
+	auth()
+		.createCustomToken(uid)
+		.then((customToken) => {
+			// Send token back to client
+			return customToken;
+		})
+		.catch((error) => {
+			console.log('error creating: ', error);
+			new Error('Error creating token');
+		});
 
-export const verifyToken = (idToken: string): Promise<string> => {
-	return new Promise((reject, resolve) => {
-		auth()
-			.verifyIdToken(idToken)
-			.then((decodedToken) => {
-				resolve(decodedToken.uid);
-			})
-			.catch((error) => {
-				reject(error);
-			});
-	});
-};
+export const verifyToken = (idToken: string) =>
+	auth()
+		.verifyIdToken(idToken)
+		.then((decodedToken) => {
+			return decodedToken.uid;
+		})
+		.catch((error) => {
+			console.log('error verifying: ', error);
+			new Error('Error verifying token');
+		});

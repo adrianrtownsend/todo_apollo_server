@@ -4,17 +4,28 @@ import { GraphQLError } from 'graphql';
 
 export const authenticateUser = (userToken: string): Promise<string> => {
 	return new Promise((resolve) => {
-		const tokenVerified = verifyToken(userToken);
+		verifyToken(userToken)
+			.then((token) => {
+				if (!token)
+					throw new GraphQLError('User is not authenticated', {
+						extensions: {
+							code: 'FORBIDDEN',
+							http: { status: 403 },
+						},
+					});
+				resolve(token);
+			})
+			.catch((error) => {
+				console.log('error: ', error);
+				throw new GraphQLError('User is not authenticated fail', {
+					extensions: {
+						code: 'FORBIDDEN',
+						http: { status: 403 },
+					},
+				});
+			});
 		// throwing a `GraphQLError` here allows us to specify an HTTP status code,
 		// standard `Error`s will have a 500 status code by default
-		if (!tokenVerified)
-			throw new GraphQLError('User is not authenticated', {
-				extensions: {
-					code: 'FORBIDDEN',
-					http: { status: 403 },
-				},
-			});
-		resolve(tokenVerified);
 	});
 };
 
